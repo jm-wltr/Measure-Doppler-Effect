@@ -15,7 +15,7 @@ def main():
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 25000
-    CHUNK = int(RATE/10)
+    CHUNK = int(RATE/40)
     stream = mic.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, output=True, frames_per_buffer=CHUNK)
     
     #fig, ax = plt.subplots(figsize=(10,6))
@@ -33,6 +33,12 @@ def main():
     while True:
         data = np.frombuffer(stream.read(CHUNK), np.int16)
         fourier = np.abs(np.fft.fft(data))
+        i = 0
+        for n in fourier:
+            if fourier[i] < 10000:
+                fourier[i] = 0
+            i += 1
+        data = np.fft.ifft(fourier)
         line.set_ydata(data)
         line2.set_ydata(fourier)
         plt.pause(0.0001)
