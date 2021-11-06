@@ -19,7 +19,7 @@ def main():
     mic = pyaudio.PyAudio()
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
-    RATE = 25000
+    RATE = 48000
     div = 2
     CHUNK = int(RATE/div)
     stream = mic.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, output=True, frames_per_buffer=CHUNK)
