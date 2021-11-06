@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 13 20:00:55 2021
+Created on Sat Nov  6 13:26:52 2021
 
+@author: jaime
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 13 20:00:55 2021
 @author: jaime
 """
 
@@ -15,7 +21,7 @@ def main():
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 25000
-    CHUNK = int(RATE/10)
+    CHUNK = int(RATE)
     stream = mic.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, output=True, frames_per_buffer=CHUNK)
     
     #fig, ax = plt.subplots(figsize=(10,6))
@@ -35,6 +41,23 @@ def main():
         fourier = np.abs(np.fft.fft(data))
         line.set_ydata(data)
         line2.set_ydata(fourier)
+        i = 2
+        peaks = []
+        indices = []
+        while i <= len(fourier)/2-3:
+            if fourier[i] > fourier[i-2] \
+            and fourier[i] > fourier[i-1] \
+            and fourier[i] > fourier [i+1] \
+            and fourier[i] > fourier[i+2]:
+                peaks.append(fourier[i])
+                indices.append(i)
+            i = i + 1
+        peak = max(peaks)
+        index = peaks.index(peak)
+        print(indices[index])
+        print(peak)
+        print()
+            
         plt.pause(0.0001)
         
 if __name__ == '__main__':
