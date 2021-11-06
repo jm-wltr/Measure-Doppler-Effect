@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov  6 13:26:52 2021
-
 @author: jaime
 """
 
@@ -21,7 +20,8 @@ def main():
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 25000
-    CHUNK = int(RATE)
+    div = 2
+    CHUNK = int(RATE/div)
     stream = mic.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, output=True, frames_per_buffer=CHUNK)
     
     #fig, ax = plt.subplots(figsize=(10,6))
@@ -54,7 +54,7 @@ def main():
             i = i + 1
         peak = max(peaks)
         index = peaks.index(peak)
-        print(indices[index])
+        print(indices[index]*div)
         print(peak)
         print()
             
