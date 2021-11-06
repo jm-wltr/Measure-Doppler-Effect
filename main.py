@@ -5,10 +5,8 @@ Created on Wed Oct 13 20:00:55 2021
 """
 
 import pyaudio
-import struct
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy.signal as sig
 
 def main():
       
@@ -16,11 +14,11 @@ def main():
     ------- Here are the values you can adjust to your liking -------
     """
     RATE = 48000 #Number of samples per second
-    div = 1 #RATE/div = CHUNK (number of samples displayed each time)
+    div = 10 #RATE/div = CHUNK (number of samples displayed each time)
     amplitude = 15000 #maximum value of the y axis of the audio wave graph
-    volume = 30000 #maximum value of the y axis of the fourier transform graph
+    volume = 40000 #maximum value of the y axis of the fourier transform graph
     CHUNK = int(RATE/div) # Number of samples displayed each time (DO NOT MODIFY)
-    low_end = 1000 #minimum frequency that can be displayer in the console as tallest peak. Remeber it has to be an int.
+    low_end = 5000 #minimum frequency that can be displayer in the console as tallest peak. Remeber it has to be an int.
     high_end = 25000 #maximum frequency that can be displayed in the console as tallest peak.
     """
     -----------------------------------------------------------------
@@ -64,15 +62,18 @@ def main():
         line2.set_ydata(fourier)
         
         #Display frequency of largest peak
-        indices = sig.find_peaks(fourier[0:int(len(fourier)/2)])
-        peaks = []
-        for i in indices[0]:
-            peaks.append(fourier[i])
-        peak = max(peaks)
-        index = peaks.index(peak)
-        print(indices[0][index]*div)
+        i = int(low_end/div)
+        if i <0:
+            i = 0
+        if int(high_end/div) >= int(len(fourier)/2)-3:
+            high_end = int(len(fourier)/2)
+
+        peak = max(fourier[i:high_end-3])
+        index = list(fourier).index(peak)
         print(peak)
+        print(index*div)
         print()
+        
         plt.pause(0.0001)
         
 if __name__ == '__main__':
