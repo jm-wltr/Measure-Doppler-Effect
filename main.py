@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
 Created on Sat Nov  6 13:26:52 2021
 @author: jaime
 """
@@ -20,21 +18,25 @@ def main():
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 48000
-    div = 2
+    div = 5
     CHUNK = int(RATE/div)
     stream = mic.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, output=True, frames_per_buffer=CHUNK)
     
     #fig, ax = plt.subplots(figsize=(10,6))
     fig = plt.figure()
-    ax = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212)
-    x = np.arange(0, 2 * CHUNK, 2)
+    ax = fig.add_subplot(211, title = "Audio wave", xlabel = "Time (ms)")
+    ax2 = fig.add_subplot(212, title = "Fourier transform", xlabel = "Frequency (Hz)")
+    time = np.linspace(0, 1000/div, num = CHUNK)
+    freq = np.linspace(0, RATE, num = CHUNK)
     ax.set_ylim(-15000, 15000)
     ax2.set_ylim(0, 10000000)
-    ax.set_xlim(0, CHUNK*2) #make sure our x axis matched our chunk size
-    ax2.set_xlim(0, CHUNK)
-    line, = ax.plot(x, np.random.rand(CHUNK))
-    line2, = ax2.plot(x, np.random.rand(CHUNK))
+    ax.set_xlim(0, 1000/div) #make sure our x axis matched our chunk size
+    ax2.set_xlim(0, RATE/2)
+    line, = ax.plot(time, np.random.rand(CHUNK))
+    line2, = ax2.plot(freq, np.random.rand(CHUNK))
+    ax.set_yticks([])
+    ax2.set_yticks([])
+    plt.tight_layout()
     
     while True:
         data = np.frombuffer(stream.read(CHUNK), np.int16)
