@@ -8,6 +8,7 @@ import pyaudio
 import struct
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.signal as sig
 
 def main():
       
@@ -15,7 +16,7 @@ def main():
     ------- Here are the values you can adjust to your liking -------
     """
     RATE = 48000 #Number of samples per second
-    div = 5 #RATE/div = CHUNK (number of samples displayed each time)
+    div = 1 #RATE/div = CHUNK (number of samples displayed each time)
     amplitude = 15000 #maximum value of the y axis of the audio wave graph
     volume = 30000 #maximum value of the y axis of the fourier transform graph
     CHUNK = int(RATE/div) # Number of samples displayed each time (DO NOT MODIFY)
@@ -63,35 +64,15 @@ def main():
         line2.set_ydata(fourier)
         
         #Display frequency of largest peak
-        i = int(low_end/div)
-        
-        if i <2:
-            i = 2
-        if int(high_end/div) > int(CHUNK/2)-3:
-            high_end = int(CHUNK/2)-3
-            
+        indices = sig.find_peaks(fourier[0:int(len(fourier)/2)])
         peaks = []
-        indices = []
-        while i <= int(high_end/div):
-            if fourier[i] > fourier[i-1] and fourier[i] > fourier[i+1]:
-                #and fourier[i] > fourier[i-2] \
-                    #and fourier[i] > fourier [i+2] \
-            
-                peaks.append(fourier[i])
-                indices.append(i)
-            i = i + 1
-        try:
-            peak = max(peaks)
-            index = peaks.index(peak)
-            print(indices[index]*div)
-            print(peak)
-        except ValueError:
-            print("NaN")
-            print("NaN")
-            pass
-
+        for i in indices[0]:
+            peaks.append(fourier[i])
+        peak = max(peaks)
+        index = peaks.index(peak)
+        print(indices[0][index]*div)
+        print(peak)
         print()
-            
         plt.pause(0.0001)
         
 if __name__ == '__main__':
