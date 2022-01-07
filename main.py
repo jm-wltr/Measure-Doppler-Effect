@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on Wed Oct 13 20:00:55 2021
 @author: jaime
@@ -7,6 +8,7 @@ import pyaudio
 import matplotlib.pyplot as plt
 import numpy as np
 import pyautogui
+import time as tm
       
 def main():
       
@@ -14,7 +16,7 @@ def main():
     ------- Here are the values you can adjust to your liking -------
     """
     RATE = 48000 #Number of samples per second
-    div = 4 #RATE/div = CHUNK (number of samples displayed each time)
+    div = 5 #RATE/div = CHUNK (number of samples displayed each time)
     amplitude = 15000 #maximum value of the y axis of the audio wave graph
     volume = 40000 #maximum value of the y axis of the fourier transform graph
     CHUNK = int(RATE/div) # Number of samples displayed each time (DO NOT MODIFY)
@@ -24,6 +26,7 @@ def main():
     -----------------------------------------------------------------
     """
 
+    start = 0
     #Define the rest of the variables needed for recording audio and start recording
     mic = pyaudio.PyAudio()
     FORMAT = pyaudio.paInt16
@@ -74,13 +77,17 @@ def main():
         print(index*div)
 
         print()
-                
-        # if index*div > 20160:
-        #     pyautogui.write(" ")   
-                          
-        plt.pause(0.0000001)
         
-        plt.pause(0.0001)
-        
+        if tm.time() - start > 0.4:
+            if index*div > 20170:
+                pyautogui.write("up ")
+                start = tm.time()
+            elif index*div < 20140:
+                pyautogui.write("down ")  
+                start = tm.time()
+           
+        plt.pause(0.001)
+         
 if __name__ == '__main__':
     main()
+    
