@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Oct 13 20:00:55 2021
 @author: jaime
@@ -7,19 +6,20 @@ Created on Wed Oct 13 20:00:55 2021
 import pyaudio
 import matplotlib.pyplot as plt
 import numpy as np
-
+import pyautogui
+      
 def main():
       
     """
     ------- Here are the values you can adjust to your liking -------
     """
     RATE = 48000 #Number of samples per second
-    div = 10 #RATE/div = CHUNK (number of samples displayed each time)
+    div = 4 #RATE/div = CHUNK (number of samples displayed each time)
     amplitude = 15000 #maximum value of the y axis of the audio wave graph
     volume = 40000 #maximum value of the y axis of the fourier transform graph
     CHUNK = int(RATE/div) # Number of samples displayed each time (DO NOT MODIFY)
-    low_end = 5000 #minimum frequency that can be displayer in the console as tallest peak. Remeber it has to be an int.
-    high_end = 25000 #maximum frequency that can be displayed in the console as tallest peak.
+    low_end = 20000 #minimum frequency that can be displayer in the console as tallest peak. Remeber it has to be an int.
+    high_end = 20300 #maximum frequency that can be displayed in the console as tallest peak.
     """
     -----------------------------------------------------------------
     """
@@ -41,7 +41,7 @@ def main():
     freq = np.linspace(0, RATE, num = CHUNK)
 
     ax.set_xlim(0, 1000/div)
-    ax2.set_xlim(0, RATE/2)
+    ax2.set_xlim(20000,20300)
     ax.set_ylim(-amplitude, amplitude)
     ax2.set_ylim(0, volume)
 
@@ -68,11 +68,17 @@ def main():
         if int(high_end/div) >= int(len(fourier)/2)-3:
             high_end = int(len(fourier)/2)
 
-        peak = max(fourier[i:high_end-3])
-        index = list(fourier).index(peak)
+        peak = max(fourier[i:int(high_end/div)])
+        index = i + int(list(fourier[i:int(high_end/div)]).index(peak))
         print(peak)
         print(index*div)
+
         print()
+                
+        # if index*div > 20160:
+        #     pyautogui.write(" ")   
+                          
+        plt.pause(0.0000001)
         
         plt.pause(0.0001)
         
